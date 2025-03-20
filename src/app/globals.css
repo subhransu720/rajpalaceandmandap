@@ -1,0 +1,158 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #8a2be2; /* Purple */
+  --secondary: #9370db; /* Medium Purple */
+  --accent: #e6e6fa; /* Lavender */
+  --background: #ffffff;
+  --foreground: #171717;
+  --light-purple: #d8bfd8; /* Thistle */
+  --dark-purple: #4b0082; /* Indigo */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-playfair);
+  }
+  
+  body {
+    font-family: var(--font-montserrat);
+  }
+}
+
+@layer utilities {
+  .btn-primary {
+    @apply bg-[#8a2be2] text-white px-6 py-3 rounded-md hover:bg-[#7126c0] transition-all duration-300 font-medium shadow-lg hover:shadow-xl;
+  }
+  
+  .btn-secondary {
+    @apply bg-transparent border-2 border-[#8a2be2] text-[#8a2be2] px-6 py-3 rounded-md hover:bg-[#8a2be2] hover:text-white transition-all duration-300 font-medium shadow-md hover:shadow-lg;
+  }
+  
+  .section-padding {
+    @apply py-16 md:py-24;
+  }
+  
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .heading-primary {
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold;
+  }
+  
+  .heading-secondary {
+    @apply text-3xl md:text-4xl font-bold;
+  }
+  
+  .heading-tertiary {
+    @apply text-2xl md:text-3xl font-bold;
+  }
+
+  /* Animation Classes */
+  .fade-in {
+    animation: fadeIn 1s ease-in-out;
+  }
+
+  .slide-up {
+    animation: slideUp 0.8s ease-out;
+  }
+
+  .slide-in-left {
+    animation: slideInLeft 0.8s ease-out;
+  }
+
+  .slide-in-right {
+    animation: slideInRight 0.8s ease-out;
+  }
+
+  .bounce {
+    animation: bounce 1s ease infinite;
+  }
+
+  .pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .zoom-in {
+    animation: zoomIn 0.5s ease-out;
+  }
+
+  .rotate {
+    animation: rotate 8s linear infinite;
+  }
+
+  /* Gradient Backgrounds */
+  .bg-purple-gradient {
+    background: linear-gradient(135deg, #8a2be2 0%, #9370db 100%);
+  }
+
+  .bg-lavender-gradient {
+    background: linear-gradient(135deg, #e6e6fa 0%, #d8bfd8 100%);
+  }
+
+  /* Card Styles */
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-2;
+  }
+
+  /* Glass Effect */
+  .glass-effect {
+    @apply bg-white/30 backdrop-blur-md border border-white/20 shadow-lg;
+  }
+}
+
+/* Keyframes for animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
