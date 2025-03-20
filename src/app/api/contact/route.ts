@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
+import { google } from 'googleapis';
 
 // Add runtime configuration for Edge
 export const runtime = 'edge';
@@ -16,6 +16,20 @@ export const runtime = 'edge';
  * - Client's message
  * - Quick response section with contact options
  */
+
+// Initialize Gmail API
+const oauth2Client = new google.auth.OAuth2(
+  process.env.GMAIL_CLIENT_ID,
+  process.env.GMAIL_CLIENT_SECRET,
+  process.env.GMAIL_REDIRECT_URI
+);
+
+oauth2Client.setCredentials({
+  refresh_token: process.env.GMAIL_REFRESH_TOKEN,
+});
+
+const gmail = google.gmail({ version: 'v1', auth: oauth2Client });
+
 export async function POST(req: NextRequest) {
   try {
     // Parse the request body
@@ -39,59 +53,46 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Configure nodemailer transporter
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-      secure: true,
-      tls: {
-        rejectUnauthorized: false
-      }
-    });
+    // Create email content
+    const emailContent = `
+New Booking Request from Raj Palace Convention Website
 
-    // Create formatted HTML for the email
-    const emailHtml = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
-        <h1 style="color: #4b0082; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #d4af37; padding-bottom: 10px;">New Booking Request</h1>
-        
-        <div style="margin-bottom: 20px;">
-          <p style="margin: 5px 0;"><strong>Name:</strong> ${name}</p>
-          <p style="margin: 5px 0;"><strong>Email:</strong> ${email}</p>
-          <p style="margin: 5px 0;"><strong>Phone:</strong> ${phone}</p>
-          ${eventType ? `<p style="margin: 5px 0;"><strong>Event Type:</strong> ${eventType}</p>` : ''}
-          ${date ? `<p style="margin: 5px 0;"><strong>Event Date:</strong> ${date}</p>` : ''}
-        </div>
-        
-        <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
-          <h3 style="color: #4b0082; margin-top: 0;">Message:</h3>
-          <p style="white-space: pre-line;">${message}</p>
-        </div>
-        
-        <div style="background-color: #fffaf0; padding: 15px; border-radius: 5px; border-left: 4px solid #d4af37;">
-          <h3 style="color: #4b0082; margin-top: 0;">Quick Response:</h3>
-          <p>You can directly contact this customer by:</p>
-          <ul>
-            <li>Calling or texting their phone: ${phone}</li>
-            <li>Or use your WhatsApp to message them at +91 9178080116</li>
-          </ul>
-        </div>
-      </div>
+Contact Details:
+Name: ${name}
+Email: ${email}
+Phone: ${phone}
+
+Event Details:
+Event Type: ${eventType || 'Not specified'}
+Event Date: ${date || 'Not specified'}
+
+Message:
+${message}
+
+Please respond to this request as soon as possible.
     `;
 
-    // Email options
-    const mailOptions = {
-      from: process.env.EMAIL_USER, // Use your Gmail address as the sender
-      replyTo: email, // Set reply-to to the customer's email
-      to: process.env.EMAIL_RECIPIENT,
-      subject: `New Booking Request from ${name}`,
-      html: emailHtml,
-    };
+    // Create email in base64 format
+    const emailLines = [
+      `From: ${process.env.EMAIL_USER}`,
+      `To: ${process.env.EMAIL_RECIPIENT}`,
+      'Content-Type: text/plain; charset=utf-8',
+      'MIME-Version: 1.0',
+      `Subject: New Booking Request from ${name}`,
+      '',
+      emailContent,
+    ];
 
-    // Send email
-    await transporter.sendMail(mailOptions);
+    const email = emailLines.join('\r\n').trim();
+    const base64EncodedEmail = Buffer.from(email).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+    // Send email using Gmail API
+    await gmail.users.messages.send({
+      userId: 'me',
+      requestBody: {
+        raw: base64EncodedEmail,
+      },
+    });
 
     // Return success response
     return NextResponse.json({ success: true, message: 'Email sent successfully!' });
