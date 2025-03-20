@@ -53,6 +53,20 @@ export async function POST(req: NextRequest) {
       }
     });
 
+    // Verify transporter connection
+    await new Promise((resolve, reject) => {
+      // verify connection configuration
+      transporter.verify(function (error, success) {
+        if (error) {
+          console.log('Transporter verification error:', error);
+          reject(error);
+        } else {
+          console.log("Server is ready to take our messages");
+          resolve(success);
+        }
+      });
+    });
+
     // Create formatted HTML for the email
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
@@ -91,8 +105,18 @@ export async function POST(req: NextRequest) {
       html: emailHtml,
     };
 
-    // Send email
-    await transporter.sendMail(mailOptions);
+    // Send email with proper promise handling
+    const info = await new Promise((resolve, reject) => {
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+          console.error('Error sending email:', err);
+          reject(err);
+        } else {
+          console.log('Email sent successfully:', info);
+          resolve(info);
+        }
+      });
+    });
 
     // Return success response
     return NextResponse.json({ success: true, message: 'Email sent successfully!' });
