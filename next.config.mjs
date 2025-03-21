@@ -5,11 +5,14 @@ const nextConfig = {
   images: {
     domains: ['images.unsplash.com'],
   },
-  // Remove experimental features that might cause issues
+  // Remove experimental features to ensure stability
   experimental: {
-    // Disable optimizeCss as it's causing issues
     optimizeCss: false,
   },
+  // Add production optimizations
+  poweredByHeader: false,
+  reactStrictMode: true,
+  swcMinify: true,
   // Add proper error handling for 500 page
   onError: (err) => {
     console.error('Next.js build error:', err);

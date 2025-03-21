@@ -29,8 +29,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${playfair.variable} ${montserrat.variable}`}>
-      <body className="antialiased">
-        {children}
+      <body className="antialiased min-h-screen bg-white">
+        <main>{children}</main>
       </body>
     </html>
   );
