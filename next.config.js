@@ -24,7 +24,7 @@ const nextConfig = {
   swcMinify: true,
   output: 'standalone',
   trailingSlash: true,
-  assetPrefix: process.env.NODE_ENV === 'production' ? 'https://rajpalaceandconventionorg.vercel.app' : '',
+  assetPrefix: process.env.NODE_ENV === 'production' ? 'https://rajpalaceandconvention65.vercel.app' : '',
 };
 
 module.exports = nextConfig; 

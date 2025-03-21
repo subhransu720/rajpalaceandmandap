@@ -8,6 +8,7 @@ const playfair = Playfair_Display({
   display: "swap",
   variable: "--font-playfair",
   preload: true,
+  adjustFontFallback: true,
 });
 
 const montserrat = Montserrat({
@@ -16,6 +17,7 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
   weight: ["300", "400", "500", "600", "700"],
   preload: true,
+  adjustFontFallback: true,
 });
 
 export const metadata: Metadata = {
@@ -35,6 +37,8 @@ export default function RootLayout({
     <html lang="en" className={`${playfair.variable} ${montserrat.variable}`}>
       <head>
         <link rel="icon" href="/favicon.ico" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className="antialiased min-h-screen bg-white">
         <main>{children}</main>

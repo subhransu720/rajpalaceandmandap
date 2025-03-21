@@ -21,7 +21,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Access-Control-Allow-Origin',
-            value: '*',
+            value: 'https://rajpalaceandconvention65.vercel.app',
           },
           {
             key: 'Access-Control-Allow-Methods',
