@@ -35,8 +35,8 @@ const nextConfig = {
       },
     ];
   },
-  // Configure asset loading
-  assetPrefix: process.env.NODE_ENV === 'production' ? 'https://rajpalaceandmandap65.vercel.app' : '',
+  // Configure asset loading with correct domain
+  assetPrefix: process.env.NODE_ENV === 'production' ? 'https://rajpalaceandconvention65.vercel.app' : '',
   // Add proper error handling for 500 page
   onError: (err) => {
     console.error('Next.js build error:', err);
