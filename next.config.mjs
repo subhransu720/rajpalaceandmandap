@@ -13,6 +13,30 @@ const nextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   swcMinify: true,
+  // Add CORS headers
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET,OPTIONS,PATCH,DELETE,POST,PUT',
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'X-Requested-With, Content-Type, Authorization',
+          },
+        ],
+      },
+    ];
+  },
+  // Configure asset loading
+  assetPrefix: process.env.NODE_ENV === 'production' ? 'https://rajpalaceandmandap65.vercel.app' : '',
   // Add proper error handling for 500 page
   onError: (err) => {
     console.error('Next.js build error:', err);
