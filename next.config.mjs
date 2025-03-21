@@ -17,6 +17,16 @@ const nextConfig = {
   onError: (err) => {
     console.error('Next.js build error:', err);
   },
+  // Suppress the punycode deprecation warning
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        punycode: false,
+      };
+    }
+    return config;
+  },
 };
 
 export default nextConfig; 
